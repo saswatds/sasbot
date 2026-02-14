@@ -1,0 +1,44 @@
+spec: astro/v1
+name: sasbot
+
+meta:
+  version: 0.1.0
+  description: An AI-powered agent
+
+agent:
+  build:
+    context: .
+    dockerfile: Dockerfile
+    args:
+      NPM_SCOPE: "@saswatds"
+      NPM_REGISTRY: "https://npm.pkg.github.com"
+    secrets:
+      - id: npm_token
+        env: GITHUB_PACKAGES_TOKEN
+
+integrations:
+  anthropic:
+    provider: anthropic
+    type: model
+
+knowledge:
+  cache:
+    provider: redis
+
+ingestion:
+  data:
+    container:
+      build:
+        context: .
+        dockerfile: Dockerfile.ingestion
+        args:
+          NPM_SCOPE: "@saswatds"
+          NPM_REGISTRY: "https://npm.pkg.github.com"
+        secrets:
+          - id: npm_token
+            env: GITHUB_PACKAGES_TOKEN
+    trigger:
+      type: webhook
+
+dev:
+  interfaces: [web, slack]
