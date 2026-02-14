@@ -24,6 +24,8 @@ integrations:
 knowledge:
   cache:
     provider: redis
+  graph:
+    provider: neo4j
 
 ingestion:
   data:
