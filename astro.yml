@@ -38,6 +38,7 @@ ingestion:
         secrets:
           - id: npm_token
             env: GITHUB_PACKAGES_TOKEN
+      port: 3001
     trigger:
       type: webhook
 
