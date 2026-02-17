@@ -1,3 +1,4 @@
+# yaml-language-server: $schema=https://astropod.ai/schema/astro.json
 spec: astro/v1
 name: sasbot
 
@@ -14,6 +15,11 @@ agent:
     secrets:
       - id: npm_token
         env: GITHUB_PACKAGES_TOKEN
+
+models:
+  ollama:
+    provider: ollama
+    model: mistral:7b
 
 integrations:
   anthropic:
