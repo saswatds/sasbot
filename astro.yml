@@ -19,12 +19,7 @@ agent:
 models:
   ollama:
     provider: ollama
-    model: mistral:7b
-
-integrations:
-  anthropic:
-    provider: anthropic
-    type: model
+    model: qwen2.5:1.5b
 
 knowledge:
   cache:

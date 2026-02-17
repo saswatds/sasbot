@@ -60,7 +60,7 @@ You have tools for:
 // Configure the agent with all tools
 const agent = new AstroAgent()
   .meta({ title: 'sasbot', description: "Saswat's personal productivity agent" })
-  .model('anthropic/claude-sonnet-4-5-20250929')
+  .model('ollama/qwen2.5:1.5b')
   .instructions(systemPrompt)
   .tool({ type: 'graph', graph: saveNote })
   .tool({ type: 'graph', graph: searchNotes })
