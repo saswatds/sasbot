@@ -10,6 +10,7 @@
  */
 
 import { AstroAgent } from '@saswatds/astro-agent';
+import type { AgentStep } from '@saswatds/astro-types';
 import {
   MessagingClient,
   type AgentConfig,
@@ -122,32 +123,43 @@ async function main() {
     const username = message.user?.username || message.user?.id || 'Anonymous User';
     console.log(`📨 ${username}: ${message.content}`);
 
-    try {
-      const reply = await new Promise<string>((resolve, reject) => {
-        agent.stream({
-          prompt: message.content,
-          threadId: message.conversationId,
-          userId: message.user?.id ?? 'anonymous',
-          onFinish: (result: string) => resolve(result),
-          onError: (error: Error) => reject(error),
+    // Signal start of streaming response
+    stream.sendContentChunk(message.conversationId, { type: 'START', content: '' });
+
+    agent.stream({
+      prompt: message.content,
+      threadId: message.conversationId,
+      userId: message.user?.id ?? 'anonymous',
+      onReasoningStart: () => {
+        stream.sendStatusUpdate(message.conversationId, { status: 'THINKING' });
+      },
+      onReasoningEnd: () => {
+        stream.sendStatusUpdate(message.conversationId, { status: 'GENERATING' });
+      },
+      onStepStart: (step: AgentStep) => {
+        stream.sendStatusUpdate(message.conversationId, {
+          status: 'PROCESSING',
+          customMessage: `Running ${step.name}`,
+          emoji: '🔧',
         });
-      });
-
-      stream.sendMessage({
-        conversationId: message.conversationId,
-        platform: message.platform,
-        platformContext: message.platformContext,
-        content: reply,
-        user: {
-          id: AGENT_NAME.toLowerCase(),
-          username: AGENT_NAME,
-        },
-      });
-
-      console.log('📤 Response sent');
-    } catch (error) {
-      console.error('❌ Error handling message:', error);
-    }
+      },
+      onStepEnd: (step: AgentStep) => {
+        stream.sendStatusUpdate(message.conversationId, {
+          status: 'ANALYZING',
+          customMessage: `Finished ${step.name}`,
+        });
+      },
+      onChunk: (chunk: string) => {
+        stream.sendContentChunk(message.conversationId, { type: 'DELTA', content: chunk });
+      },
+      onFinish: (result: string) => {
+        stream.sendContentChunk(message.conversationId, { type: 'END', content: '' });
+        console.log('📤 Response sent');
+      },
+      onError: (error: Error) => {
+        console.error('❌ Error handling message:', error);
+      },
+    });
   });
 
   stream.on('error', (error: Error) => {

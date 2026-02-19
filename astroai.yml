@@ -1,4 +1,4 @@
-# yaml-language-server: $schema=https://astropod.ai/schema/astro.json
+# yaml-language-server: $schema=https://api.astropod.ai/schema/astroai.json
 spec: astro/v1
 name: sasbot
 
