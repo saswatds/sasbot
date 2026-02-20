@@ -5,13 +5,7 @@ WORKDIR /app
 
 # Install dependencies
 COPY package.json bun.lock* ./
-RUN --mount=type=secret,id=npm_token \
-    if [ -f /run/secrets/npm_token ]; then \
-      echo "@saswatds:registry=https://npm.pkg.github.com" >> ~/.npmrc; \
-      echo "@astromode-ai:registry=https://npm.pkg.github.com" >> ~/.npmrc; \
-    fi && \
-    bun install --frozen-lockfile && \
-    rm -f ~/.npmrc
+RUN bun install --frozen-lockfile
 
 # Copy source
 COPY . .
