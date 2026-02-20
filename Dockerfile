@@ -9,7 +9,6 @@ RUN --mount=type=secret,id=npm_token \
     if [ -f /run/secrets/npm_token ]; then \
       echo "@saswatds:registry=https://npm.pkg.github.com" >> ~/.npmrc; \
       echo "@astromode-ai:registry=https://npm.pkg.github.com" >> ~/.npmrc; \
-      echo "//npm.pkg.github.com/:_authToken=$(cat /run/secrets/npm_token)" >> ~/.npmrc; \
     fi && \
     bun install --frozen-lockfile && \
     rm -f ~/.npmrc
