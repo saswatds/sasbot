@@ -16,7 +16,7 @@ import {
   type AgentConfig,
   type AgentResponse,
   type Message,
-} from '@saswatds/astro-messaging';
+} from '@astromode-ai/astro-messaging';
 
 // Tools
 import { saveNote, searchNotes, listNotes } from './tools/notes';

@@ -5,9 +5,9 @@
     "": {
       "name": "sasbot",
       "dependencies": {
+        "@astromode-ai/astro-messaging": "latest",
         "@saswatds/astro-agent": "latest",
         "@saswatds/astro-graph": "latest",
-        "@saswatds/astro-messaging": "^1.3.0",
         "ioredis": "^5.9.3",
       },
       "devDependencies": {
@@ -34,6 +34,8 @@
     "@ai-sdk/provider-v6": ["@ai-sdk/provider@3.0.0", "", { "dependencies": { "json-schema": "^0.4.0" } }, "sha512-m9ka3ptkPQbaHHZHqDXDF9C9B5/Mav0KTdky1k2HZ3/nrW2t1AgObxIVPyGDWQNS9FXT/FS6PIoSjpcP/No8rQ=="],
 
     "@ai-sdk/ui-utils-v5": ["@ai-sdk/ui-utils@1.2.11", "", { "dependencies": { "@ai-sdk/provider": "1.1.3", "@ai-sdk/provider-utils": "2.2.8", "zod-to-json-schema": "^3.24.1" }, "peerDependencies": { "zod": "^3.23.8" } }, "sha512-3zcwCc8ezzFlwp3ZD15wAPjf2Au4s3vAbKsXQVyhxODHcmu0iyPO2Eua6D/vicq/AUm/BAo60r97O6HU+EI0+w=="],
+
+    "@astromode-ai/astro-messaging": ["@astromode-ai/astro-messaging@0.1.1", "https://npm.pkg.github.com/download/@astromode-ai/astro-messaging/0.1.1/d2d52b80e06ef5b5f44be26711d15aa1581180fe", { "dependencies": { "@grpc/grpc-js": "^1.9.0", "@grpc/proto-loader": "^0.7.10" } }, "sha512-3Zu8pO5m5IRCAFKxjfJHq9H7maWUlotTkkKaJvYFH3t8yuwrWmQBg9gMCA0Av6y/of7fpGrjxJgCGn5RKy1A6A=="],
 
     "@grpc/grpc-js": ["@grpc/grpc-js@1.14.3", "", { "dependencies": { "@grpc/proto-loader": "^0.8.0", "@js-sdsl/ordered-map": "^4.4.2" } }, "sha512-Iq8QQQ/7X3Sac15oB6p0FmUg/klxQvXLeileoqrTRGJYLV+/9tubbr9ipz0GKHjmXVsgFPo/+W+2cA8eNcR+XA=="],
 
@@ -154,8 +156,6 @@
     "@saswatds/astro-engine": ["@saswatds/astro-engine@1.2.0", "https://npm.pkg.github.com/download/@saswatds/astro-engine/1.2.0/bf2a10598f032f44e2ef27f05962efbc1f2931d4", { "dependencies": { "@saswatds/astro-types": "1.2.0" } }, "sha512-ngz7liqQxZNY8TKCzJMi874sz9ksN7+aosR+G02RqukK8nO9TBpJH9yRvsFeJ+ddK4x/XxJo47QIS+vVHvUdCg=="],
 
     "@saswatds/astro-graph": ["@saswatds/astro-graph@1.2.0", "https://npm.pkg.github.com/download/@saswatds/astro-graph/1.2.0/80423dbadde8fd49723a5e3f0fc270a1dc1df601", { "dependencies": { "@saswatds/astro-nodes": "1.2.0", "@saswatds/astro-types": "1.2.0", "ai": "^6.0.11", "nanoid": "^5.1.6", "zod": "^4.3.5" } }, "sha512-8JR6lrzk6+4HJKNBDA8RQhbKLVPpCDOGx1qm5Gm0O0cGaB9djMEcnPJn0cgnA2S3d67rQs92pgumrGi5A4Q9kw=="],
-
-    "@saswatds/astro-messaging": ["@saswatds/astro-messaging@1.3.1", "https://npm.pkg.github.com/download/@saswatds/astro-messaging/1.3.1/e8bdd269f2759f7f0c521a1f43e35b5bf11ca271", { "dependencies": { "@grpc/grpc-js": "^1.9.0", "@grpc/proto-loader": "^0.7.10" } }, "sha512-4LxLF43NWTB7V+HNWNqljV8jKR8m4uekGyxBSIOzVY2owfckvkoSHPBJdE0mBNT0QhLAHmej+qEcyWc2Dvntfw=="],
 
     "@saswatds/astro-nodes": ["@saswatds/astro-nodes@1.2.0", "https://npm.pkg.github.com/download/@saswatds/astro-nodes/1.2.0/89da1d2b71e679f7009dad7244a3e8956b4e3de1", { "dependencies": { "@saswatds/astro-types": "1.2.0" } }, "sha512-wcdMSIZO8F87vFHXy91sAFlzEFLBw1JRyEozCxl4zCuO8PMVCV+leHO8vplo7+SCxK6pkX8MhcfrNSKa+cwNVQ=="],
 
