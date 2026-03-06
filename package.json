@@ -2,7 +2,7 @@
   "name": "sasbot",
   "version": "0.1.0",
   "type": "module",
-  "description": "An AI-powered agent",
+  "description": "A personal assistant bot that helps with daily tasks and assistance",
   "scripts": {
     "dev": "bun --watch agent/index.ts",
     "dev:ingest": "bun --watch ingestion/index.ts",
@@ -11,13 +11,14 @@
   },
   "main": "./agent/index.ts",
   "dependencies": {
-    "@saswatds/astro-agent": "latest",
-    "@saswatds/astro-graph": "latest",
-    "@astromode-ai/astro-messaging": "latest",
-    "ioredis": "^5.9.3"
+    "@mastra/core": "latest",
+    "@mastra/memory": "latest",
+    "@mastra/libsql": "latest",
+    "@astropods/adapter-mastra": "latest",
+    "ioredis": "latest"
   },
   "devDependencies": {
-    "@types/bun": "^1.3.9",
+    "@types/bun": "^1.1.14",
     "typescript": "^5.9.3"
   }
 }

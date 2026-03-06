@@ -1,87 +1,56 @@
 # sasbot
 
-**Your personal AI agent for productivity, built for developers who ship.**
+A personal assistant bot that helps with daily tasks and assistance
 
-sasbot is an always-on assistant that manages your tasks, notes, reminders, and GitHub workflow — accessible from Slack or the web.
+## Quick start
 
----
+```bash
+# Install dependencies
+bun install
 
-## What it does
+# Start the agent locally
+ast dev
+```
 
-**Stay organized** — Create tasks with priorities and due dates using natural language. Never lose a thought with tagged notes and instant search.
+## Project structure
 
-**Stay on schedule** — Set reminders that proactively notify you. sasbot understands relative dates like "tomorrow" or "next Friday."
-
-**Stay informed** — Search the web, fetch content from URLs, and check your GitHub notifications, PRs, and issues without leaving the conversation.
-
----
-
-## Try asking
-
-> "Remind me to review the deployment checklist tomorrow at 10am"
-
-> "Save a note tagged #ideas: build a CLI dashboard for server metrics"
-
-> "What are my open GitHub notifications?"
-
-> "Show me all high priority tasks that are still open"
-
-> "Search the web for the latest Bun release notes"
-
-> "What PRs are open on saswatds/astro-agent?"
-
-> "Find my notes tagged #work"
-
----
-
-## Capabilities
-
-|                |                                                            |
-| -------------- | ---------------------------------------------------------- |
-| **Notes**      | Save, search, and list notes with tags                     |
-| **Tasks**      | Create, complete, and filter tasks by status and priority  |
-| **Reminders**  | Schedule proactive reminders with natural language dates   |
-| **Web Search** | Search the web and fetch content from any URL              |
-| **GitHub**     | View notifications, pull requests, and issues across repos |
-
----
-
-## Interfaces
-
-- **Slack** — Chat with sasbot directly in your workspace via Socket Mode
-- **Web Playground** — Interactive UI at `localhost:3000` for local development
-
----
+```
+sasbot/
+├── agent/
+│   └── index.ts          # Agent entry point
+├── ingestion/
+│   ├── webhook/
+│   │   ├── index.ts      # webhook ingestion pipeline
+│   │   └── Dockerfile
+├── astropods.yml             # Agent specification
+├── Dockerfile            # Agent container
+├── .env                  # Environment variables (set via ast configure; not committed)
+└── package.json
+```
 
 ## Configuration
 
-sasbot is configured in `astro.yml` and requires the following environment variables:
+The agent is configured in `astropods.yml`. Key sections:
 
-| Variable            | Purpose                             |
-| ------------------- | ----------------------------------- |
-| `ANTHROPIC_API_KEY` | Powers the AI model (Claude Sonnet) |
-| `SLACK_APP_TOKEN`   | Slack Socket Mode connection        |
-| `SLACK_BOT_TOKEN`   | Slack bot identity                  |
-| `GITHUB_TOKEN`      | GitHub API access                   |
-| `BRAVE_API_KEY`     | Web search                          |
+### Model
 
----
+Self-hosted **ollama** provider running `qwen3.5:2b`.
 
-## Architecture
+### Integrations
 
-```
-┌─────────────┐     ┌──────────────────┐     ┌───────────┐
-│   Slack /   │────▶│     sasbot       │────▶│   Redis   │
-│   Web UI    │◀────│   (agent core)   │     │ (storage) │
-└─────────────┘     └──────────────────┘     └───────────┘
-                           │
-                    ┌──────┴──────┐
-                    ▼             ▼
-              Claude API    External APIs
-              (reasoning)   (GitHub, Brave,
-                             web fetch)
-```
+| Integration | Type      | Environment variable |
+| ----------- | --------- | -------------------- |
+| Anthropic   | Model API | `ANTHROPIC_API_KEY`  |
+| GitHub      | Tool      | `GITHUB_TOKEN`       |
 
----
+### Knowledge stores
+- **Qdrant** — vector store for semantic search and embeddings
+- **Neo4j** — graph database for relationship data
 
-Built with [Astro Agent Framework](https://github.com/saswatds) · Powered by Claude
+### Interfaces
+- **Web** — HTTP/SSE endpoint (playground available at `localhost:3000` during dev)
+- **Slack** — bot integration via Socket Mode
+
+### Ingestion
+
+Data pipeline triggered via **webhook**. Edit `ingestion/index.ts` to define how data flows into your knowledge stores.

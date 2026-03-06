@@ -1,0 +1,43 @@
+spec: package/v1
+name: sasbot
+
+meta:
+  description: A personal assistant bot that helps with daily tasks and assistance
+
+agent:
+  build:
+    context: .
+    dockerfile: Dockerfile
+
+models:
+  default:
+    provider: ollama
+    model: qwen3.5:2b
+  anthropic:
+    provider: anthropic
+
+knowledge:
+  cache:
+    provider: redis
+  docs:
+    provider: qdrant
+    persistent: true
+  graph:
+    provider: neo4j
+
+integrations:
+  github:
+    provider: github
+
+ingestion:
+  webhook:
+    container:
+      build:
+        context: .
+        dockerfile: ingestion/webhook/Dockerfile
+      port: 3001
+    trigger:
+      type: webhook
+
+dev:
+  interfaces: [web, slack]
