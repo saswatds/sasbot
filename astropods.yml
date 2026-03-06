@@ -1,3 +1,4 @@
+# yaml-language-server: $schema=https://astropods.ai/schema/package.json
 spec: package/v1
 name: sasbot
 
@@ -8,6 +9,17 @@ agent:
   build:
     context: .
     dockerfile: Dockerfile
+  inputs:
+    - name: EMBEDDING_MODEL
+      datatype: string
+      description: Embedding model in provider/model format
+      default: ollama/nomic-embed-text
+      optional: true
+    - name: EMBEDDING_DIMENSION
+      datatype: number
+      description: Vector dimension of the embedding model
+      default: "768"
+      optional: true
 
 models:
   default:

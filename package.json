@@ -11,11 +11,13 @@
   },
   "main": "./agent/index.ts",
   "dependencies": {
-    "@mastra/core": "latest",
-    "@mastra/memory": "latest",
-    "@mastra/libsql": "latest",
     "@astropods/adapter-mastra": "latest",
-    "ioredis": "latest"
+    "@mastra/core": "latest",
+    "@mastra/libsql": "latest",
+    "@mastra/memory": "latest",
+    "@mastra/qdrant": "^1.0.1",
+    "ioredis": "latest",
+    "neo4j-driver": "^6.0.1"
   },
   "devDependencies": {
     "@types/bun": "^1.1.14",

@@ -33,6 +33,9 @@ import { setReminder, listReminders } from './tools/reminders';
 import { webSearch, fetchUrl } from './tools/web';
 import { githubNotifications, githubPrs, githubIssues } from './tools/github';
 import { currentDatetime } from './tools/datetime';
+import { semanticSearch, ingestDocument } from './tools/knowledge';
+import { addEntity, addRelationship, queryGraph, searchGraph } from './tools/graph';
+import { ensureCollection } from './lib/qdrant';
 
 const memory = new Memory({
   storage: new LibSQLStore({
@@ -62,11 +65,15 @@ You have tools for:
 - **Web**: Search the web (Brave Search) and fetch URL content
 - **GitHub**: Check notifications, list PRs, and search issues
 - **DateTime**: Get current date/time for time-based reasoning
+- **Knowledge (Qdrant)**: Semantic search over ingested documents and store new knowledge
+- **Graph (Neo4j)**: Add entities, relationships, and query the knowledge graph
 
 ## Behavior Guidelines
 - When asked for a summary or status update, pull from multiple sources (tasks, reminders, GitHub notifications).
 - For tasks with due dates, use the current_datetime tool to reason about relative dates ("tomorrow", "next week").
 - When setting reminders, convert relative times to absolute ISO timestamps using the current time above.
+- Use semantic-search to find relevant knowledge before answering factual questions.
+- Use the graph tools to track entities and relationships Saswat mentions (people, projects, tools, etc.).
 - Keep responses focused and actionable. Use bullet points for lists.
 - If a tool errors (e.g., missing API key), tell Saswat plainly what's not configured.`;
 
@@ -91,7 +98,19 @@ const agent = new Agent({
     githubPrs,
     githubIssues,
     currentDatetime,
+    semanticSearch,
+    ingestDocument,
+    addEntity,
+    addRelationship,
+    queryGraph,
+    searchGraph,
   },
 });
 
-serve(agent);
+// Ensure Qdrant collection exists, then serve
+ensureCollection()
+  .then(() => serve(agent))
+  .catch((err) => {
+    console.error('Failed to initialize Qdrant collection, starting without it:', err.message);
+    serve(agent);
+  });
