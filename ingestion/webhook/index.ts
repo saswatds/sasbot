@@ -12,13 +12,13 @@
  */
 
 import { QdrantVector } from '@mastra/qdrant';
-import { ModelRouterEmbeddingModel } from '@mastra/core/llm';
+import { createOllama } from 'ollama-ai-provider-v2';
 import neo4j from 'neo4j-driver';
 
 const PORT = Number(process.env.PORT || 3001);
 const COLLECTION_NAME = 'sasbot-knowledge';
 const EMBEDDING_DIMENSION = 768;
-const EMBEDDING_MODEL = process.env.EMBEDDING_MODEL || 'ollama/nomic-embed-text';
+const EMBEDDING_MODEL = process.env.EMBEDDING_MODEL || 'nomic-embed-text';
 
 // Qdrant setup
 const qdrantUrl = process.env.QDRANT_URL || `http://${process.env.QDRANT_HOST || 'localhost'}:${process.env.QDRANT_PORT || '6333'}`;
@@ -31,14 +31,14 @@ const neo4jDriver = neo4j.driver(neo4jUrl, neo4j.auth.basic(
   process.env.NEO4J_PASSWORD || 'neo4j',
 ));
 
-let embeddingModel: ModelRouterEmbeddingModel | null = null;
-function getModel(): ModelRouterEmbeddingModel {
-  if (!embeddingModel) embeddingModel = new ModelRouterEmbeddingModel(EMBEDDING_MODEL);
-  return embeddingModel;
-}
+// Ollama embedding
+const ollamaProvider = createOllama({
+  baseURL: process.env.OLLAMA_BASE_URL,
+});
 
 async function getEmbedding(text: string): Promise<number[]> {
-  const result = await getModel().doEmbed({ values: [text] });
+  const model = ollamaProvider.textEmbeddingModel(EMBEDDING_MODEL);
+  const result = await model.doEmbed({ values: [text] });
   return result.embeddings[0]!;
 }
 

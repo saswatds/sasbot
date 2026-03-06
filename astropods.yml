@@ -22,7 +22,7 @@ agent:
       optional: true
 
 models:
-  default:
+  ollama:
     provider: ollama
     model: qwen3.5:2b
   anthropic:

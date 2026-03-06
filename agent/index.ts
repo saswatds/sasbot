@@ -25,6 +25,7 @@ import { Agent } from '@mastra/core/agent';
 import { Memory } from '@mastra/memory';
 import { LibSQLStore } from '@mastra/libsql';
 import { serve } from '@astropods/adapter-mastra';
+import { createOllama } from 'ollama-ai-provider-v2';
 
 // Tools
 import { saveNote, searchNotes, listNotes } from './tools/notes';
@@ -36,6 +37,8 @@ import { currentDatetime } from './tools/datetime';
 import { semanticSearch, ingestDocument } from './tools/knowledge';
 import { addEntity, addRelationship, queryGraph, searchGraph } from './tools/graph';
 import { ensureCollection } from './lib/qdrant';
+
+console.log(process.env, '---'); // Log environment variables for debugging (remove in production!)
 
 const memory = new Memory({
   storage: new LibSQLStore({
@@ -81,7 +84,9 @@ const agent = new Agent({
   id: 'sasbot',
   name: 'Sasbot',
   instructions: systemPrompt,
-  model: 'ollama/qwen3.5:2b',
+  model: createOllama({
+    baseURL: process.env.OLLAMA_BASE_URL,
+  })('qwen3.5:2b'),
   memory,
   tools: {
     saveNote,

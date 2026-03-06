@@ -1,24 +1,26 @@
-import { ModelRouterEmbeddingModel } from '@mastra/core/llm';
+import { createOllama } from 'ollama-ai-provider-v2';
 
-const EMBEDDING_MODEL = process.env.EMBEDDING_MODEL || 'ollama/nomic-embed-text';
+const EMBEDDING_MODEL = process.env.EMBEDDING_MODEL || 'nomic-embed-text';
 
-let model: ModelRouterEmbeddingModel | null = null;
+let provider: ReturnType<typeof createOllama> | null = null;
 
-function getModel(): ModelRouterEmbeddingModel {
-  if (!model) {
-    model = new ModelRouterEmbeddingModel(EMBEDDING_MODEL);
+function getProvider() {
+  if (!provider) {
+    provider = createOllama({
+      baseURL: process.env.OLLAMA_BASE_URL,
+    });
   }
-  return model;
+  return provider;
 }
 
 export async function getEmbedding(text: string): Promise<number[]> {
-  const m = getModel();
-  const result = await m.doEmbed({ values: [text] });
+  const model = getProvider().textEmbeddingModel(EMBEDDING_MODEL);
+  const result = await model.doEmbed({ values: [text] });
   return result.embeddings[0]!;
 }
 
 export async function getEmbeddings(texts: string[]): Promise<number[][]> {
-  const m = getModel();
-  const result = await m.doEmbed({ values: texts });
+  const model = getProvider().textEmbeddingModel(EMBEDDING_MODEL);
+  const result = await model.doEmbed({ values: texts });
   return result.embeddings;
 }
