@@ -13,7 +13,7 @@ agent:
     - name: EMBEDDING_MODEL
       datatype: string
       description: Embedding model in provider/model format
-      default: ollama/nomic-embed-text
+      default: nomic-embed-text
       optional: true
     - name: EMBEDDING_DIMENSION
       datatype: number
@@ -37,9 +37,24 @@ knowledge:
   graph:
     provider: neo4j
 
+providers:
+  cloudflare:
+    scope: [integrations]
+    variables:
+      - name: AI_API_KEY
+        datatype: string
+        description: Cloudflare Workers AI API key
+        secret: true
+      - name: ACCOUNT_ID
+        datatype: string
+        description: Cloudflare account ID
+        secret: true
+
 integrations:
   github:
     provider: github
+  cloudflare:
+    provider: cloudflare
 
 ingestion:
   webhook:
@@ -52,4 +67,7 @@ ingestion:
       type: webhook
 
 dev:
-  interfaces: [web, slack]
+  interfaces: [web]
+  overrides:
+    messagingImage: astro-messaging:latest
+    playgroundImage: astro-playground:latest

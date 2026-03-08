@@ -26,6 +26,7 @@ import { Memory } from '@mastra/memory';
 import { LibSQLStore } from '@mastra/libsql';
 import { serve } from '@astropods/adapter-mastra';
 import { createOllama } from 'ollama-ai-provider-v2';
+import { CloudflareVoice } from '@mastra/voice-cloudflare';
 
 // Tools
 import { saveNote, searchNotes, listNotes } from './tools/notes';
@@ -38,7 +39,13 @@ import { semanticSearch, ingestDocument } from './tools/knowledge';
 import { addEntity, addRelationship, queryGraph, searchGraph } from './tools/graph';
 import { ensureCollection } from './lib/qdrant';
 
-console.log(process.env, '---'); // Log environment variables for debugging (remove in production!)
+const voice = new CloudflareVoice({
+  listeningModel: {
+    apiKey: process.env.CLOUDFLARE_AI_API_KEY,
+    model: '@cf/openai/whisper-tiny-en',
+    account_id: process.env.CLOUDFLARE_ACCOUNT_ID,
+  },
+});
 
 const memory = new Memory({
   storage: new LibSQLStore({
@@ -88,6 +95,7 @@ const agent = new Agent({
     baseURL: process.env.OLLAMA_BASE_URL,
   })('qwen3.5:2b'),
   memory,
+  voice,
   tools: {
     saveNote,
     searchNotes,

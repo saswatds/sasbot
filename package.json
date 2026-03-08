@@ -15,6 +15,7 @@
     "@mastra/core": "latest",
     "@mastra/libsql": "latest",
     "@mastra/memory": "latest",
+    "@mastra/voice-cloudflare": "latest",
     "@mastra/qdrant": "^1.0.1",
     "ioredis": "latest",
     "neo4j-driver": "^6.0.1",
