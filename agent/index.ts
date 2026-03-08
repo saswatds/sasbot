@@ -25,7 +25,7 @@ import { Agent } from '@mastra/core/agent';
 import { Memory } from '@mastra/memory';
 import { LibSQLStore } from '@mastra/libsql';
 import { serve } from '@astropods/adapter-mastra';
-import { createOllama } from 'ollama-ai-provider-v2';
+// import { createOllama } from 'ollama-ai-provider-v2';
 import { CloudflareVoice } from '@mastra/voice-cloudflare';
 
 // Tools
@@ -91,9 +91,10 @@ const agent = new Agent({
   id: 'sasbot',
   name: 'Sasbot',
   instructions: systemPrompt,
-  model: createOllama({
-    baseURL: process.env.OLLAMA_BASE_URL,
-  })('qwen3.5:2b'),
+  model: 'anthropic/claude-sonnet-4-20250514',
+  // model: createOllama({
+  //   baseURL: process.env.OLLAMA_BASE_URL,
+  // })('qwen3.5:2b'),
   memory,
   voice,
   tools: {
