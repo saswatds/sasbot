@@ -38,6 +38,7 @@ import { currentDatetime } from './tools/datetime';
 import { semanticSearch, ingestDocument } from './tools/knowledge';
 import { addEntity, addRelationship, queryGraph, searchGraph } from './tools/graph';
 import { ensureCollection } from './lib/qdrant';
+import { createOllama } from 'ollama-ai-provider-v2';
 
 const voice = new CloudflareVoice({
   listeningModel: {

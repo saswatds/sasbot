@@ -68,6 +68,3 @@ ingestion:
 
 dev:
   interfaces: [web]
-  overrides:
-    messagingImage: astro-messaging:latest
-    playgroundImage: astro-playground:latest
