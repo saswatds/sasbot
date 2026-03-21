@@ -3,7 +3,7 @@ spec: package/v1
 name: sasbot
 
 meta:
-  description: A personal assistant bot that helps with daily tasks and assistance
+  visibility: private
 
 agent:
   build:
@@ -22,9 +22,6 @@ agent:
       optional: true
 
 models:
-  ollama:
-    provider: ollama
-    model: qwen3.5:2b
   anthropic:
     provider: anthropic
 
@@ -67,4 +64,6 @@ ingestion:
       type: webhook
 
 dev:
-  interfaces: [web]
+  interfaces:
+    messaging:
+      adapters: [web]
