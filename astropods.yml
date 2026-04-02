@@ -53,16 +53,6 @@ integrations:
   cloudflare:
     provider: cloudflare
 
-ingestion:
-  webhook:
-    container:
-      build:
-        context: .
-        dockerfile: ingestion/webhook/Dockerfile
-      port: 3001
-    trigger:
-      type: webhook
-
 dev:
   interfaces:
     messaging:
