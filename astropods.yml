@@ -9,17 +9,6 @@ agent:
   build:
     context: .
     dockerfile: Dockerfile
-  inputs:
-    - name: EMBEDDING_MODEL
-      datatype: string
-      description: Embedding model in provider/model format
-      default: nomic-embed-text
-      optional: true
-    - name: EMBEDDING_DIMENSION
-      datatype: number
-      description: Vector dimension of the embedding model
-      default: "768"
-      optional: true
 
 models:
   anthropic:
@@ -28,11 +17,6 @@ models:
 knowledge:
   cache:
     provider: redis
-  docs:
-    provider: qdrant
-    persistent: true
-  graph:
-    provider: neo4j
 
 providers:
   cloudflare:
