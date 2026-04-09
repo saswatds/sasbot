@@ -15,13 +15,11 @@ FROM oven/bun:1.3.10-slim
 
 WORKDIR /app
 
-# Copy from builder
-COPY --from=builder /app/node_modules ./node_modules
-COPY --from=builder /app/agent ./agent
-COPY --from=builder /app/package.json ./
+# Copy from builder (set ownership inline to avoid expensive recursive chown)
+COPY --from=builder --chown=bun:bun /app/node_modules ./node_modules
+COPY --from=builder --chown=bun:bun /app/agent ./agent
+COPY --from=builder --chown=bun:bun /app/package.json ./
 
-# Use non-root user already present in oven/bun image (bun:1000)
-RUN chown -R bun:bun /app
 USER bun
 
 # Run the agent
