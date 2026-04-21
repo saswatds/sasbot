@@ -24,6 +24,8 @@ import { webSearch, fetchUrl } from './tools/web';
 import { githubNotifications, githubPrs, githubIssues } from './tools/github';
 import { currentDatetime } from './tools/datetime';
 
+console.log('Environment variables:', JSON.stringify(process.env, null, 2));
+
 const voice = new CloudflareVoice({
   listeningModel: {
     apiKey: process.env.CLOUDFLARE_AI_API_KEY,
