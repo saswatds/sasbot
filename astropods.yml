@@ -17,6 +17,8 @@ models:
 knowledge:
   cache:
     provider: redis
+  postgres:
+    provider: postgres
 
 providers:
   cloudflare:
