@@ -19,6 +19,8 @@ knowledge:
     provider: redis
   postgres:
     provider: postgres
+  users:
+    provider: postgres
 
 providers:
   cloudflare:

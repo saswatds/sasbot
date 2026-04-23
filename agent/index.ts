@@ -15,6 +15,8 @@ import { Memory } from '@mastra/memory';
 import { LibSQLStore } from '@mastra/libsql';
 import { serve } from '@astropods/adapter-mastra';
 import { CloudflareVoice } from '@mastra/voice-cloudflare';
+import pg from 'pg';
+import { getRedis } from './lib/redis';
 
 // Tools
 import { saveNote, searchNotes, listNotes } from './tools/notes';
@@ -95,4 +97,51 @@ const agent = new Agent({
   },
 });
 
+async function checkPostgres(name: string, prefix: string) {
+  const host = process.env[`${prefix}_HOST`];
+  const port = process.env[`${prefix}_PORT`];
+  const user = process.env[`${prefix}_USER`];
+  const password = process.env[`${prefix}_PASSWORD`];
+  const database = process.env[`${prefix}_DB`];
+  if (!host) {
+    console.warn(`⚠ ${prefix}_HOST not set, skipping ${name} postgres check`);
+    return;
+  }
+  const client = new pg.Client({
+    host,
+    port: port ? parseInt(port, 10) : 5432,
+    user,
+    password,
+    database,
+  });
+  try {
+    await client.connect();
+    const res = await client.query('SELECT NOW() AS time');
+    console.log(`✓ Postgres [${name}] connected — server time:`, res.rows[0].time);
+  } finally {
+    await client.end();
+  }
+}
+
+async function checkRedis() {
+  const redis = getRedis();
+  const pong = await redis.ping();
+  console.log(`✓ Redis [cache] connected — PING ${pong}`);
+}
+
+async function checkConnections() {
+  console.log('Checking service connections...');
+  const results = await Promise.allSettled([
+    checkPostgres('postgres', 'POSTGRES_POSTGRES'),
+    checkPostgres('users', 'POSTGRES_USERS'),
+    checkRedis(),
+  ]);
+  for (const result of results) {
+    if (result.status === 'rejected') {
+      console.error('✗ Connection check failed:', result.reason?.message ?? result.reason);
+    }
+  }
+}
+
+await checkConnections();
 serve(agent);
