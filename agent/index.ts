@@ -26,7 +26,43 @@ import { webSearch, fetchUrl } from './tools/web';
 import { githubNotifications, githubPrs, githubIssues } from './tools/github';
 import { currentDatetime } from './tools/datetime';
 
-console.log('Environment variables:', JSON.stringify(process.env, null, 2));
+const requiredEnvVars = [
+  'AGENT_HOST',
+  'AGENT_URL',
+  'ANTHROPIC_API_KEY',
+  'ASTRO_AGENT_BUILD',
+  'ASTRO_AGENT_NAME',
+  'CLOUDFLARE_ACCOUNT_ID',
+  'CLOUDFLARE_AI_API_KEY',
+  'GITHUB_TOKEN',
+  'GRPC_SERVER_ADDR',
+  'OTEL_EXPORTER_OTLP_ENDPOINT',
+  'POSTGRES_DB',
+  'POSTGRES_HOST',
+  'POSTGRES_PASSWORD',
+  'POSTGRES_PORT',
+  'POSTGRES_POSTGRES_DB',
+  'POSTGRES_POSTGRES_HOST',
+  'POSTGRES_POSTGRES_PASSWORD',
+  'POSTGRES_POSTGRES_PORT',
+  'POSTGRES_POSTGRES_USER',
+  'POSTGRES_USER',
+  'POSTGRES_USERS_DB',
+  'POSTGRES_USERS_HOST',
+  'POSTGRES_USERS_PASSWORD',
+  'POSTGRES_USERS_PORT',
+  'POSTGRES_USERS_USER',
+  'REDIS_HOST',
+  'REDIS_PASSWORD',
+  'REDIS_PORT',
+  'REDIS_URL',
+];
+
+for (const name of requiredEnvVars) {
+  if (!process.env[name]) {
+    throw new Error(`Missing required environment variable: ${name}`);
+  }
+}
 
 const voice = new CloudflareVoice({
   listeningModel: {
