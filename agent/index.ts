@@ -41,11 +41,6 @@ const requiredEnvVars = [
   'POSTGRES_HOST',
   'POSTGRES_PASSWORD',
   'POSTGRES_PORT',
-  'POSTGRES_POSTGRES_DB',
-  'POSTGRES_POSTGRES_HOST',
-  'POSTGRES_POSTGRES_PASSWORD',
-  'POSTGRES_POSTGRES_PORT',
-  'POSTGRES_POSTGRES_USER',
   'POSTGRES_USER',
   'POSTGRES_USERS_DB',
   'POSTGRES_USERS_HOST',
@@ -187,7 +182,7 @@ async function checkRedis() {
 async function checkConnections() {
   console.log('Checking service connections...');
   await Promise.allSettled([
-    checkPostgres('postgres', 'POSTGRES_POSTGRES'),
+    checkPostgres('postgres', 'POSTGRES'),
     checkPostgres('users', 'POSTGRES_USERS'),
     checkRedis(),
   ]);
