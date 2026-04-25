@@ -27,9 +27,9 @@ import { githubNotifications, githubPrs, githubIssues } from './tools/github';
 import { currentDatetime } from './tools/datetime';
 
 const requiredEnvVars = [
-  'AGENT_HOST',
-  'AGENT_URL',
   'ANTHROPIC_API_KEY',
+  'ASTRO_AGENT_HOST',
+  'ASTRO_AGENT_URL',
   'ASTRO_AGENT_BUILD',
   'ASTRO_AGENT_NAME',
   'CLOUDFLARE_ACCOUNT_ID',
@@ -140,7 +140,7 @@ async function checkPostgres(name: string, prefix: string) {
   const password = process.env[`${prefix}_PASSWORD`];
   const database = process.env[`${prefix}_DB`];
   if (!host) {
-    console.warn(`⚠ ${prefix}_HOST not set, skipping ${name} postgres check`);
+    console.warn(`⚠ Postgres [${name}] — ${prefix}_HOST not set, skipping`);
     return;
   }
   const client = new pg.Client({
@@ -149,34 +149,48 @@ async function checkPostgres(name: string, prefix: string) {
     user,
     password,
     database,
+    connectionTimeoutMillis: 5000,
   });
   try {
     await client.connect();
     const res = await client.query('SELECT NOW() AS time');
-    console.log(`✓ Postgres [${name}] connected — server time:`, res.rows[0].time);
+    console.log(`✓ Postgres [${name}] connected — ${host}:${port}/${database} — server time: ${res.rows[0].time}`);
+  } catch (err: any) {
+    console.error(`✗ Postgres [${name}] failed — ${host}:${port}/${database} — ${err.message}`);
   } finally {
-    await client.end();
+    await client.end().catch(() => {});
   }
 }
 
 async function checkRedis() {
-  const redis = getRedis();
-  const pong = await redis.ping();
-  console.log(`✓ Redis [cache] connected — PING ${pong}`);
+  const host = process.env.REDIS_HOST || 'localhost';
+  const port = process.env.REDIS_PORT || '6379';
+  const redis = new (await import('ioredis')).default({
+    host,
+    port: parseInt(port, 10),
+    password: process.env.REDIS_PASSWORD || undefined,
+    connectTimeout: 5000,
+    maxRetriesPerRequest: 0,
+    lazyConnect: true,
+  });
+  try {
+    await redis.connect();
+    const pong = await redis.ping();
+    console.log(`✓ Redis [cache] connected — ${host}:${port} — PING ${pong}`);
+  } catch (err: any) {
+    console.error(`✗ Redis [cache] failed — ${host}:${port} — ${err.message}`);
+  } finally {
+    await redis.disconnect().catch(() => {});
+  }
 }
 
 async function checkConnections() {
   console.log('Checking service connections...');
-  const results = await Promise.allSettled([
+  await Promise.allSettled([
     checkPostgres('postgres', 'POSTGRES_POSTGRES'),
     checkPostgres('users', 'POSTGRES_USERS'),
     checkRedis(),
   ]);
-  for (const result of results) {
-    if (result.status === 'rejected') {
-      console.error('✗ Connection check failed:', result.reason?.message ?? result.reason);
-    }
-  }
 }
 
 await checkConnections();
