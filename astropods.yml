@@ -1,5 +1,5 @@
-# yaml-language-server: $schema=https://astropods.ai/schema/package.json
-spec: package/v1
+# yaml-language-server: $schema=https://astropods.com/schema/package.json
+spec: blueprint/v1
 name: sasbot
 
 meta:
@@ -18,8 +18,6 @@ knowledge:
   cache:
     provider: redis
   postgres:
-    provider: postgres
-  users:
     provider: postgres
 
 providers:
