@@ -11,14 +11,15 @@ agent:
     dockerfile: Dockerfile
 
 models:
+  claude:
+    provider: astro-gateway
+    model: claude-sonnet 
   anthropic:
     provider: anthropic
 
 knowledge:
   cache:
     provider: redis
-  postgres:
-    provider: postgres
 
 providers:
   cloudflare:
@@ -39,29 +40,29 @@ integrations:
   cloudflare:
     provider: cloudflare
 
-ingestion:
-  startup:
-    container:
-      build:
-        context: .
-        dockerfile: ingestion/startup/Dockerfile
-    trigger:
-      type: startup
-  webhook:
-    container:
-      build:
-        context: .
-        dockerfile: ingestion/webhook/Dockerfile
-      port: 3001
-    trigger:
-      type: webhook
-  schedule:
-    container:
-      build:
-        context: .
-        dockerfile: ingestion/schedule/Dockerfile
-    trigger:
-      type: schedule
+# ingestion:
+#   startup:
+#     container:
+#       build:
+#         context: .
+#         dockerfile: ingestion/startup/Dockerfile
+#     trigger:
+#       type: startup
+#   webhook:
+#     container:
+#       build:
+#         context: .
+#         dockerfile: ingestion/webhook/Dockerfile
+#       port: 3001
+#     trigger:
+#       type: webhook
+#   schedule:
+#     container:
+#       build:
+#         context: .
+#         dockerfile: ingestion/schedule/Dockerfile
+#     trigger:
+#       type: schedule
 
 dev:
   interfaces:

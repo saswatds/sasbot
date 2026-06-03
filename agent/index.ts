@@ -15,8 +15,8 @@ import { Memory } from '@mastra/memory';
 import { LibSQLStore } from '@mastra/libsql';
 import { serve } from '@astropods/adapter-mastra';
 import { CloudflareVoice } from '@mastra/voice-cloudflare';
-import pg from 'pg';
-import { getRedis } from './lib/redis';
+
+import { astroGateway } from './lib/astro-gateway';
 
 // Tools
 import { saveNote, searchNotes, listNotes } from './tools/notes';
@@ -26,33 +26,8 @@ import { webSearch, fetchUrl } from './tools/web';
 import { githubNotifications, githubPrs, githubIssues } from './tools/github';
 import { currentDatetime } from './tools/datetime';
 
-const requiredEnvVars = [
-  'ANTHROPIC_API_KEY',
-  'ASTRO_AGENT_HOST',
-  'ASTRO_AGENT_URL',
-  'ASTRO_AGENT_BUILD',
-  'ASTRO_AGENT_NAME',
-  'CLOUDFLARE_ACCOUNT_ID',
-  'CLOUDFLARE_AI_API_KEY',
-  'GITHUB_TOKEN',
-  'GRPC_SERVER_ADDR',
-  'OTEL_EXPORTER_OTLP_ENDPOINT',
-  'POSTGRES_DB',
-  'POSTGRES_HOST',
-  'POSTGRES_PASSWORD',
-  'POSTGRES_PORT',
-  'POSTGRES_USER',
-  'REDIS_HOST',
-  'REDIS_PASSWORD',
-  'REDIS_PORT',
-  'REDIS_URL',
-];
 
-for (const name of requiredEnvVars) {
-  if (!process.env[name]) {
-    throw new Error(`Missing required environment variable: ${name}`);
-  }
-}
+console.log(process.env);
 
 const voice = new CloudflareVoice({
   listeningModel: {
@@ -102,7 +77,7 @@ const agent = new Agent({
   id: 'sasbot',
   name: 'Sasbot',
   instructions: systemPrompt,
-  model: 'anthropic/claude-sonnet-4-20250514',
+  model: astroGateway('claude-sonnet'),
   memory,
   voice,
   tools: {
@@ -123,65 +98,4 @@ const agent = new Agent({
   },
 });
 
-async function checkPostgres(name: string, prefix: string) {
-  const host = process.env[`${prefix}_HOST`];
-  const port = process.env[`${prefix}_PORT`];
-  const user = process.env[`${prefix}_USER`];
-  const password = process.env[`${prefix}_PASSWORD`];
-  const database = process.env[`${prefix}_DB`];
-  if (!host) {
-    console.warn(`⚠ Postgres [${name}] — ${prefix}_HOST not set, skipping`);
-    return;
-  }
-  const client = new pg.Client({
-    host,
-    port: port ? parseInt(port, 10) : 5432,
-    user,
-    password,
-    database,
-    connectionTimeoutMillis: 5000,
-  });
-  try {
-    await client.connect();
-    const res = await client.query('SELECT NOW() AS time');
-    console.log(`✓ Postgres [${name}] connected — ${host}:${port}/${database} — server time: ${res.rows[0].time}`);
-  } catch (err: any) {
-    console.error(`✗ Postgres [${name}] failed — ${host}:${port}/${database} — ${err.message}`);
-  } finally {
-    await client.end().catch(() => {});
-  }
-}
-
-async function checkRedis() {
-  const host = process.env.REDIS_HOST || 'localhost';
-  const port = process.env.REDIS_PORT || '6379';
-  const redis = new (await import('ioredis')).default({
-    host,
-    port: parseInt(port, 10),
-    password: process.env.REDIS_PASSWORD || undefined,
-    connectTimeout: 5000,
-    maxRetriesPerRequest: 0,
-    lazyConnect: true,
-  });
-  try {
-    await redis.connect();
-    const pong = await redis.ping();
-    console.log(`✓ Redis [cache] connected — ${host}:${port} — PING ${pong}`);
-  } catch (err: any) {
-    console.error(`✗ Redis [cache] failed — ${host}:${port} — ${err.message}`);
-  } finally {
-    await redis.disconnect().catch(() => {});
-  }
-}
-
-async function checkConnections() {
-  console.log('Checking service connections...');
-  await Promise.allSettled([
-    checkPostgres('postgres', 'POSTGRES'),
-    checkPostgres('users', 'POSTGRES_USERS'),
-    checkRedis(),
-  ]);
-}
-
-await checkConnections();
 serve(agent);
