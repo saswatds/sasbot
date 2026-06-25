@@ -9,13 +9,11 @@ agent:
   build:
     context: .
     dockerfile: Dockerfile
+  interfaces:
+    messaging: true
+    frontend: true
+  astro_ai_gateway: true
 
-models:
-  claude:
-    provider: astro-gateway
-    model: claude-sonnet 
-  anthropic:
-    provider: anthropic
 
 knowledge:
   cache:
@@ -68,3 +66,5 @@ dev:
   interfaces:
     messaging:
       adapters: [web]
+    frontend:
+      port: 3000

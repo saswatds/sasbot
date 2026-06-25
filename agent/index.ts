@@ -16,6 +16,8 @@ import { LibSQLStore } from '@mastra/libsql';
 import { serve } from '@astropods/adapter-mastra';
 import { CloudflareVoice } from '@mastra/voice-cloudflare';
 
+import { serveFrontend } from './frontend';
+
 import { astroGateway } from './lib/astro-gateway';
 
 // Tools
@@ -26,8 +28,6 @@ import { webSearch, fetchUrl } from './tools/web';
 import { githubNotifications, githubPrs, githubIssues } from './tools/github';
 import { currentDatetime } from './tools/datetime';
 
-
-console.log(process.env);
 
 const voice = new CloudflareVoice({
   listeningModel: {
@@ -77,7 +77,7 @@ const agent = new Agent({
   id: 'sasbot',
   name: 'Sasbot',
   instructions: systemPrompt,
-  model: astroGateway('claude-sonnet'),
+  model: astroGateway('claude-sonnet-4-6'),
   memory,
   voice,
   tools: {
@@ -99,3 +99,4 @@ const agent = new Agent({
 });
 
 serve(agent);
+serveFrontend();
