@@ -28,15 +28,6 @@ import { webSearch, fetchUrl } from './tools/web';
 import { githubNotifications, githubPrs, githubIssues } from './tools/github';
 import { currentDatetime } from './tools/datetime';
 
-
-const voice = new CloudflareVoice({
-  listeningModel: {
-    apiKey: process.env.CLOUDFLARE_AI_API_KEY,
-    model: '@cf/openai/whisper-tiny-en',
-    account_id: process.env.CLOUDFLARE_ACCOUNT_ID,
-  },
-});
-
 const memory = new Memory({
   storage: new LibSQLStore({
     id: 'memory',
@@ -79,7 +70,6 @@ const agent = new Agent({
   instructions: systemPrompt,
   model: astroGateway('claude-sonnet-4-6'),
   memory,
-  voice,
   tools: {
     saveNote,
     searchNotes,

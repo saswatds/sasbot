@@ -6,7 +6,7 @@
  * provider declared in astropods.yml.
  */
 export function astroGateway(model: string) {
-  const url = process.env.ASTRO_GATEWAY_URL;
+  const url = `${process.env.ASTRO_GATEWAY_URL}/v1`;
   const apiKey = process.env.ASTRO_GATEWAY_API_KEY;
 
   if (!url) throw new Error('ASTRO_GATEWAY_URL is not set');

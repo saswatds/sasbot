@@ -5,6 +5,7 @@
 
 # Astro
 .ast/
+.ast-preview/
 
 # Dependencies
 node_modules/
