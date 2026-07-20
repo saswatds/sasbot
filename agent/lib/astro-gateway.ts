@@ -12,6 +12,9 @@ export function astroGateway(model: string) {
   if (!url) throw new Error('ASTRO_GATEWAY_URL is not set');
   if (!apiKey) throw new Error('ASTRO_GATEWAY_API_KEY is not set');
 
+  // Log to track url and api key
+  console.log('[-]', url, ' -- ', apiKey);
+
   return {
     providerId: 'astro',
     modelId: model,
