@@ -14,10 +14,7 @@ import { Agent } from '@mastra/core/agent';
 import { Memory } from '@mastra/memory';
 import { LibSQLStore } from '@mastra/libsql';
 import { serve } from '@astropods/adapter-mastra';
-import { CloudflareVoice } from '@mastra/voice-cloudflare';
-
 import { serveFrontend } from './frontend';
-
 import { astroGateway } from './lib/astro-gateway';
 
 // Tools
