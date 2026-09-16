@@ -16,6 +16,7 @@ import { LibSQLStore } from '@mastra/libsql';
 import { serve } from '@astropods/adapter-mastra';
 import { serveFrontend } from './frontend';
 import { astroGateway } from './lib/astro-gateway';
+import { runSandboxOnBoot } from './lib/sandbox-boot';
 
 // Tools
 import { saveNote, searchNotes, listNotes } from './tools/notes';
@@ -87,3 +88,7 @@ const agent = new Agent({
 
 serve(agent);
 serveFrontend();
+
+void runSandboxOnBoot().catch((err) => {
+  console.error('sandbox: crashed', err);
+});
