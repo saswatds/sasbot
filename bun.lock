@@ -5,7 +5,7 @@
     "": {
       "name": "sasbot",
       "dependencies": {
-        "@astropods/adapter-mastra": "^0.8.0",
+        "@astropods/adapter-mastra": "0.8.1",
         "@mastra/core": "latest",
         "@mastra/libsql": "latest",
         "@mastra/memory": "latest",
@@ -39,7 +39,7 @@
 
     "@astropods/adapter-core": ["@astropods/adapter-core@0.12.0", "", { "dependencies": { "@opentelemetry/api": "^1.9.0", "@opentelemetry/exporter-trace-otlp-http": "^0.200.0", "@opentelemetry/resources": "^2.1.0", "@opentelemetry/sdk-trace-node": "^2.1.0", "@opentelemetry/semantic-conventions": "^1.30.0", "jose": "^6.2.12", "pino": "^10.3.1" }, "peerDependencies": { "@astropods/messaging": "latest" } }, "sha512-WP/4UxB4cdhRXWbafCAwjDzUnDdHKIXaQAJ6Si/mdXajnkn8Sb4lEr4uNYdNQy2oYt6E2vTj9F/wVYuUXyQMEg=="],
 
-    "@astropods/adapter-mastra": ["@astropods/adapter-mastra@0.8.0", "", { "dependencies": { "@astropods/adapter-core": "0.12.0", "@astropods/messaging": "^0.1.2", "@mastra/observability": "^1.5.0", "@mastra/otel-exporter": "^1.0.7", "@opentelemetry/exporter-trace-otlp-proto": "^0.200.0" }, "peerDependencies": { "@mastra/core": ">=1.14.0" }, "optionalPeers": ["@mastra/core"] }, "sha512-SGVZWPKXtdwx43G+8rFh/HqVu2NelEy32OnvZXDDhfjcoTGVtfkWnhni8TV3ayuQH8f5r+0n0slETbbPByIbyA=="],
+    "@astropods/adapter-mastra": ["@astropods/adapter-mastra@0.8.1", "", { "dependencies": { "@astropods/adapter-core": "0.12.0", "@astropods/messaging": "^0.1.2", "@mastra/observability": "^1.5.0", "@mastra/otel-exporter": "^1.0.7", "@opentelemetry/exporter-trace-otlp-proto": "^0.200.0" }, "peerDependencies": { "@mastra/core": ">=1.14.0" }, "optionalPeers": ["@mastra/core"] }, "sha512-ZHWD16jgAJoMdDUHh5PXM7MKSLODj65ysM8Fdh/Nu5L9WugoXfany/EpsfFWxCbUQPTFJ4ANyibLOdbWGfUmvQ=="],
 
     "@astropods/messaging": ["@astropods/messaging@0.1.2", "", { "dependencies": { "@grpc/grpc-js": "^1.9.0", "@grpc/proto-loader": "^0.7.10" } }, "sha512-BTXorjZS3txK7J9B2EuLz0uN7aCh+1fjFgRCAcE86FagGHi5arQkofm5WCsttz7mkDJyjYXITef0FMosqA34sg=="],
 
