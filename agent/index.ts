@@ -16,7 +16,7 @@ import { LibSQLStore } from '@mastra/libsql';
 import { serve } from '@astropods/adapter-mastra';
 import { serveFrontend } from './frontend';
 import { astroGateway } from './lib/astro-gateway';
-import { runSandboxOnBoot } from './lib/sandbox-boot';
+import { workspaceFor } from './lib/sandbox';
 
 // Tools
 import { saveNote, searchNotes, listNotes } from './tools/notes';
@@ -54,13 +54,19 @@ You have tools for:
 - **Web**: Search the web (Brave Search) and fetch URL content
 - **GitHub**: Check notifications, list PRs, and search issues
 - **DateTime**: Get current date/time for time-based reasoning
+- **Sandbox**: A private Linux machine for this conversation. Run shell
+  commands, and start, poll and kill background processes. Files persist for
+  this conversation and no other conversation can see them.
 
 ## Behavior Guidelines
 - When asked for a summary or status update, pull from multiple sources (tasks, reminders, GitHub notifications).
 - For tasks with due dates, use the current_datetime tool to reason about relative dates ("tomorrow", "next week").
 - When setting reminders, convert relative times to absolute ISO timestamps using the current time above.
 - Keep responses focused and actionable. Use bullet points for lists.
-- If a tool errors (e.g., missing API key), tell Saswat plainly what's not configured.`;
+- If a tool errors (e.g., missing API key), tell Saswat plainly what's not configured.
+- Use the sandbox for anything that is real work rather than a lookup: trying
+  code, checking a file, running a script. Put slow work in a background
+  process and report progress rather than blocking on it.`;
 
 const agent = new Agent({
   id: 'sasbot',
@@ -68,6 +74,7 @@ const agent = new Agent({
   instructions: systemPrompt,
   model: astroGateway('claude-sonnet-4-6'),
   memory,
+  workspace: workspaceFor,
   tools: {
     saveNote,
     searchNotes,
@@ -89,6 +96,3 @@ const agent = new Agent({
 serve(agent);
 serveFrontend();
 
-void runSandboxOnBoot().catch((err) => {
-  console.error('sandbox: crashed', err);
-});
