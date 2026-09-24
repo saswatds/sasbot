@@ -28,8 +28,18 @@ integrations:
     provider: github
 
 sandbox:
-  toolchain: never
-  packages: [tmux]
+  toolchain: auto
+  packages: [tmux, poppler-utils]
+  python:
+    version: "3.12"
+    packages: [pandas, matplotlib]
+  node:
+    version: "22"
+    packages: [tsx]
+  env:
+    SASBOT_MODE: preview
+  setup:
+    - "[ -d slugify ] || git clone --depth 1 https://github.com/sindresorhus/slugify slugify"
 
 # ingestion:
 #   startup:
