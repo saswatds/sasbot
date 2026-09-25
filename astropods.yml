@@ -41,6 +41,11 @@ sandbox:
   setup:
     - "[ -d slugify ] || git clone --depth 1 https://github.com/sindresorhus/slugify slugify"
 
+variables:
+  SASBOT_MODE:
+    description: The mode in which the bot is running (preview, production, etc.)
+    default: preview
+
 # ingestion:
 #   startup:
 #     container:
