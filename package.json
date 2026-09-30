@@ -9,7 +9,8 @@
   },
   "main": "./agent/index.ts",
   "dependencies": {
-    "@astropods/adapter-mastra": "0.8.2",
+    "@astropods/adapter-core": "0.13.0",
+    "@astropods/adapter-mastra": "0.8.3",
     "@mastra/core": "latest",
     "@mastra/libsql": "latest",
     "@mastra/memory": "latest",

@@ -23,9 +23,11 @@ knowledge:
     provider: redis
 
   
-integrations:
-  github:
-    provider: github
+connections:
+  - provider: github
+    scopes: [repo]
+    required: false
+    reason: Read your notifications, pull requests, and issues
 
 sandbox:
   toolchain: auto
@@ -41,10 +43,7 @@ sandbox:
   setup:
     - "[ -d slugify ] || git clone --depth 1 https://github.com/sindresorhus/slugify slugify"
 
-variables:
-  SASBOT_MODE:
-    description: The mode in which the bot is running (preview, production, etc.)
-    default: preview
+
 
 # ingestion:
 #   startup:

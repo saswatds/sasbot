@@ -6,7 +6,6 @@
  *
  * Environment variables (automatically injected by 'astro dev'):
  *   ANTHROPIC_API_KEY - injected by anthropic model
- *   GITHUB_TOKEN - injected by github tool
  *   GRPC_SERVER_ADDR - injected by Astro messaging service
  */
 
