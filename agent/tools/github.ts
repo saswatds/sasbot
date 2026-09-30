@@ -39,21 +39,73 @@ async function ghFetch(path: string, token: string) {
     },
   });
   if (!res.ok) {
-    throw new Error(`GitHub API ${res.status}: ${await res.text()}`);
+    throw new GitHubRefusal(res.status, await githubMessage(res), res.headers.get('x-github-sso'));
   }
   return res.json();
+}
+
+class GitHubRefusal extends Error {
+  constructor(
+    readonly status: number,
+    readonly githubMessage: string,
+    readonly sso: string | null,
+  ) {
+    super(`GitHub API ${status}: ${githubMessage}`);
+  }
+}
+
+async function githubMessage(res: Response): Promise<string> {
+  const text = await res.text();
+  try {
+    const body = JSON.parse(text) as { message?: unknown };
+    if (typeof body.message === 'string') return body.message;
+  } catch {}
+  return text || res.statusText;
+}
+
+function describeFailure(err: unknown): string {
+  if (err instanceof GitHubRefusal) {
+    const authorize = err.sso?.match(/url=(\S+)/)?.[1];
+    if (authorize) {
+      return `GitHub refused the request because the organization enforces SAML SSO. Ask the user to authorize the Astropods GitHub connection for that organization: ${authorize}`;
+    }
+    return `GitHub refused the request (${err.status}): ${err.githubMessage}. The user's GitHub connection is working, so do not ask them to configure a token.`;
+  }
+  return `GitHub request failed: ${String(err)}`;
+}
+
+async function withGitHub<T extends object>(
+  requestContext: RequestContext | undefined,
+  empty: T,
+  run: (token: string) => Promise<T>,
+): Promise<T | (T & { error: string })> {
+  const auth = await githubToken(requestContext);
+  if ('error' in auth) {
+    console.warn(JSON.stringify({ msg: 'github: no token for this turn', reason: auth.error }));
+    return { ...empty, error: auth.error };
+  }
+  try {
+    return await run(auth.token);
+  } catch (err) {
+    console.warn(
+      JSON.stringify({
+        msg: 'github: request refused',
+        status: err instanceof GitHubRefusal ? err.status : null,
+        github_message: err instanceof GitHubRefusal ? err.githubMessage : String(err),
+        sso_required: err instanceof GitHubRefusal ? Boolean(err.sso) : false,
+      })
+    );
+    return { ...empty, error: describeFailure(err) };
+  }
 }
 
 export const githubNotifications = createTool({
   id: 'github-notifications',
   description: 'Fetch unread GitHub notifications',
   inputSchema: z.object({}),
-  execute: async (_input, { requestContext }) => {
-    const auth = await githubToken(requestContext);
-    if ('error' in auth) {
-      return { error: auth.error, notifications: [] };
-    }
-    const data = await ghFetch('/notifications?all=false', auth.token);
+  execute: async (_input, { requestContext }) =>
+    withGitHub(requestContext, { notifications: [] as unknown[], count: 0 }, async (token) => {
+    const data = await ghFetch('/notifications?all=false', token);
     const notifications = data.map(
       (n: {
         id: string;
@@ -71,7 +123,7 @@ export const githubNotifications = createTool({
       })
     );
     return { notifications, count: notifications.length };
-  },
+    }),
 });
 
 export const githubPrs = createTool({
@@ -84,15 +136,12 @@ export const githubPrs = createTool({
       .optional()
       .describe('PR state filter (default: open)'),
   }),
-  execute: async (input, { requestContext }) => {
-    const auth = await githubToken(requestContext);
-    if ('error' in auth) {
-      return { error: auth.error, prs: [] };
-    }
+  execute: async (input, { requestContext }) =>
+    withGitHub(requestContext, { prs: [] as unknown[], count: 0 }, async (token) => {
     const state = input.state || 'open';
     const data = await ghFetch(
       `/repos/${input.repo}/pulls?state=${state}&per_page=20`,
-      auth.token
+      token
     );
     const prs = data.map(
       (pr: {
@@ -114,7 +163,7 @@ export const githubPrs = createTool({
       })
     );
     return { prs, count: prs.length };
-  },
+    }),
 });
 
 export const githubIssues = createTool({
@@ -131,24 +180,21 @@ export const githubIssues = createTool({
       .optional()
       .describe('Issue state filter (default: open)'),
   }),
-  execute: async (input, { requestContext }) => {
-    const auth = await githubToken(requestContext);
-    if ('error' in auth) {
-      return { error: auth.error, issues: [] };
-    }
+  execute: async (input, { requestContext }) =>
+    withGitHub(requestContext, { issues: [] as unknown[], count: 0 }, async (token) => {
     let data;
     if (input.query) {
       const q = `${input.query} repo:${input.repo} is:issue`;
       const result = await ghFetch(
         `/search/issues?q=${encodeURIComponent(q)}&per_page=20`,
-        auth.token
+        token
       );
       data = result.items;
     } else {
       const state = input.state || 'open';
       data = await ghFetch(
         `/repos/${input.repo}/issues?state=${state}&per_page=20`,
-        auth.token
+        token
       );
     }
     const issues = data.map(
@@ -171,5 +217,5 @@ export const githubIssues = createTool({
       })
     );
     return { issues, count: issues.length };
-  },
+    }),
 });
