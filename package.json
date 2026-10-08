@@ -11,6 +11,7 @@
   "dependencies": {
     "@astropods/adapter-core": "0.13.1",
     "@astropods/adapter-mastra": "0.8.4",
+    "@astropods/messaging": "0.2.1-next.a9d2080",
     "@mastra/core": "latest",
     "@mastra/libsql": "latest",
     "@mastra/memory": "latest",

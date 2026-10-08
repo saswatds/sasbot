@@ -7,6 +7,7 @@
       "dependencies": {
         "@astropods/adapter-core": "0.13.1",
         "@astropods/adapter-mastra": "0.8.4",
+        "@astropods/messaging": "0.2.1-next.a9d2080",
         "@mastra/core": "latest",
         "@mastra/libsql": "latest",
         "@mastra/memory": "latest",
@@ -42,7 +43,7 @@
 
     "@astropods/adapter-mastra": ["@astropods/adapter-mastra@0.8.4", "", { "dependencies": { "@astropods/adapter-core": "0.13.1", "@astropods/messaging": "^0.1.2", "@mastra/observability": "^1.5.0", "@mastra/otel-exporter": "^1.0.7", "@opentelemetry/exporter-trace-otlp-proto": "^0.200.0" }, "peerDependencies": { "@mastra/core": ">=1.14.0" }, "optionalPeers": ["@mastra/core"] }, "sha512-h8Vm8bmT06PuImnn6R/95UBSaVEiipeFzZsLPZbiecJ163YP3enqd08ygGv/Vn2Am4FVFuWi+bO6XkbPEuLhfw=="],
 
-    "@astropods/messaging": ["@astropods/messaging@0.2.0", "", { "dependencies": { "@grpc/grpc-js": "^1.9.0", "@grpc/proto-loader": "^0.7.10" } }, "sha512-0atGEha7k1KYVgowCFkxHlXWF1eZYX4fY1TxFOm3w9HinE/RQtCFtcXIkqKHTOnV07hjZXArpWiye8JBEEbd9A=="],
+    "@astropods/messaging": ["@astropods/messaging@0.2.1-next.a9d2080", "", { "dependencies": { "@grpc/grpc-js": "^1.9.0", "@grpc/proto-loader": "^0.7.10" } }, "sha512-awHqTnALOAyfUUAn4HRWMZ6qHlVenscA8hzKlwCqYuE3dsCMtmOtQ2EH4V3co0mLPFzGNfhUP1zEaMgneWAjng=="],
 
     "@grpc/grpc-js": ["@grpc/grpc-js@1.14.3", "", { "dependencies": { "@grpc/proto-loader": "^0.8.0", "@js-sdsl/ordered-map": "^4.4.2" } }, "sha512-Iq8QQQ/7X3Sac15oB6p0FmUg/klxQvXLeileoqrTRGJYLV+/9tubbr9ipz0GKHjmXVsgFPo/+W+2cA8eNcR+XA=="],
 

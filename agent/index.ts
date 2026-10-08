@@ -24,6 +24,7 @@ import { setReminder, listReminders } from './tools/reminders';
 import { webSearch, fetchUrl } from './tools/web';
 import { githubNotifications, githubPrs, githubIssues } from './tools/github';
 import { currentDatetime } from './tools/datetime';
+import { roomInfo, roomTasks, readRoomDocument, uploadRoomDocument } from './tools/room';
 
 const memory = new Memory({
   storage: new LibSQLStore({
@@ -53,6 +54,9 @@ You have tools for:
 - **Web**: Search the web (Brave Search) and fetch URL content
 - **GitHub**: Check notifications, list PRs, and search issues
 - **DateTime**: Get current date/time for time-based reasoning
+- **Rooms**: When a message is a task from a room, list your room tasks to find
+  its input documents, read them, and save your result back to the room as a
+  document. Room tools only work while you are handling a room task.
 - **Sandbox**: A private Linux machine for this conversation. Run shell
   commands, and start, poll and kill background processes. Files persist for
   this conversation and no other conversation can see them.
@@ -89,6 +93,10 @@ const agent = new Agent({
     githubPrs,
     githubIssues,
     currentDatetime,
+    roomInfo,
+    roomTasks,
+    readRoomDocument,
+    uploadRoomDocument,
   },
 });
 
