@@ -12,6 +12,9 @@ agent:
   interfaces:
     messaging: true
     frontend: true
+  skills:
+    - name: github.issue.investigate
+      description: Investigates a new GitHub issue. Reads it, checks the code and related issues, and reports likely causes and next steps.
 
 models:
   default:
