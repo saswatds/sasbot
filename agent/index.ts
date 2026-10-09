@@ -12,7 +12,7 @@
 import { Agent } from '@mastra/core/agent';
 import { Memory } from '@mastra/memory';
 import { LibSQLStore } from '@mastra/libsql';
-import { MastraAdapter, serve } from '@astropods/adapter-mastra';
+import { serve } from '@astropods/adapter-mastra';
 import { serveFrontend } from './frontend';
 import { astroGateway } from './lib/astro-gateway';
 import { workspaceFor } from './lib/sandbox';
@@ -99,18 +99,6 @@ const agent = new Agent({
     uploadRoomDocument,
   },
 });
-
-const meshSkills = [
-  {
-    name: 'github.issue.investigate',
-    description: 'Investigates a new GitHub issue: reads it, checks the code and related issues, and reports likely causes and next steps.',
-  },
-];
-
-const mastraConfig = MastraAdapter.prototype.getConfig;
-MastraAdapter.prototype.getConfig = function () {
-  return { ...mastraConfig.call(this), skills: meshSkills };
-};
 
 serve(agent);
 serveFrontend();
