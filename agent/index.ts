@@ -22,7 +22,7 @@ import { saveNote, searchNotes, listNotes } from './tools/notes';
 import { addTask, listTasks, completeTask } from './tools/tasks';
 import { setReminder, listReminders } from './tools/reminders';
 import { webSearch, fetchUrl } from './tools/web';
-import { githubNotifications, githubPrs, githubIssues } from './tools/github';
+import { githubNotifications, githubPrs, githubIssues, githubCreateIssue } from './tools/github';
 import { currentDatetime } from './tools/datetime';
 import { roomInfo, roomTasks, readRoomDocument, uploadRoomDocument } from './tools/room';
 
@@ -52,7 +52,7 @@ You have tools for:
 - **Tasks**: Add, list, and complete tasks with priority and due dates
 - **Reminders**: Set timed reminders that fire proactively
 - **Web**: Search the web (Brave Search) and fetch URL content
-- **GitHub**: Check notifications, list PRs, and search issues
+- **GitHub**: Check notifications, list PRs, search issues, and create issues
 - **DateTime**: Get current date/time for time-based reasoning
 - **Rooms**: When a message is a task from a room, list your room tasks to find
   its input documents, read them, and save your result back to the room as a
@@ -67,6 +67,7 @@ You have tools for:
 - When setting reminders, convert relative times to absolute ISO timestamps using the current time above.
 - Keep responses focused and actionable. Use bullet points for lists.
 - If a tool errors (e.g., missing API key), tell Saswat plainly what's not configured.
+- Create a GitHub issue only when asked to. Search the repo's issues first so you don't file a duplicate, and reply with the new issue's link.
 - Use the sandbox for anything that is real work rather than a lookup: trying
   code, checking a file, running a script. Put slow work in a background
   process and report progress rather than blocking on it.`;
@@ -92,6 +93,7 @@ const agent = new Agent({
     githubNotifications,
     githubPrs,
     githubIssues,
+    githubCreateIssue,
     currentDatetime,
     roomInfo,
     roomTasks,

@@ -29,14 +29,17 @@ async function githubToken(requestContext?: RequestContext): Promise<{ token: st
   }
 }
 
-async function ghFetch(path: string, token: string) {
+async function ghFetch(path: string, token: string, init?: { method: 'POST'; body: unknown }) {
   const res = await fetch(`https://api.github.com${path}`, {
+    method: init?.method ?? 'GET',
     headers: {
       Authorization: `Bearer ${token}`,
       Accept: 'application/vnd.github+json',
       'X-GitHub-Api-Version': '2022-11-28',
       'User-Agent': 'sasbot/1.0',
+      ...(init ? { 'Content-Type': 'application/json' } : {}),
     },
+    body: init ? JSON.stringify(init.body) : undefined,
   });
   if (!res.ok) {
     throw new GitHubRefusal(res.status, await githubMessage(res), res.headers.get('x-github-sso'));
@@ -217,5 +220,34 @@ export const githubIssues = createTool({
       })
     );
     return { issues, count: issues.length };
+    }),
+});
+
+interface CreatedIssue {
+  number: number;
+  title: string;
+  url: string;
+}
+
+export const githubCreateIssue = createTool({
+  id: 'github-create-issue',
+  description: 'Create an issue in a repository',
+  inputSchema: z.object({
+    repo: z
+      .string()
+      .regex(/^[A-Za-z0-9._-]+\/[A-Za-z0-9._-]+$/)
+      .describe('Repository in owner/name format'),
+    title: z.string().min(1).max(256).describe('Issue title'),
+    body: z.string().max(65536).optional().describe('Issue body in GitHub-flavored Markdown'),
+    labels: z.array(z.string()).optional().describe('Labels to add; each must already exist in the repository'),
+    assignees: z.array(z.string()).optional().describe('GitHub logins to assign'),
+  }),
+  execute: async (input, { requestContext }) =>
+    withGitHub<{ issue: CreatedIssue | null }>(requestContext, { issue: null }, async (token) => {
+      const issue = await ghFetch(`/repos/${input.repo}/issues`, token, {
+        method: 'POST',
+        body: { title: input.title, body: input.body, labels: input.labels, assignees: input.assignees },
+      });
+      return { issue: { number: issue.number, title: issue.title, url: issue.html_url } };
     }),
 });

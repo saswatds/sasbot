@@ -34,7 +34,7 @@ connections:
   - provider: github
     scopes: [repo]
     required: false
-    reason: Read your notifications, pull requests, and issues
+    reason: Read your notifications, pull requests, and issues, and create issues
 
 sandbox:
   toolchain: auto
