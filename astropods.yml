@@ -17,6 +17,8 @@ agent:
       description: Investigates a new GitHub issue. Reads it, checks the code and related issues, and reports likely causes and next steps.
     - name: github.pr.build
       description: Builds an approved plan. Makes the code change in the repository and opens a GitHub pull request that links the issue.
+    - name: slack.message.triage
+      description: Triages a new Slack message. Reads it, checks the code and related issues, and reports likely causes and next steps.
 
 models:
   default:
