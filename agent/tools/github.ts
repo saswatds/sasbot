@@ -10,6 +10,13 @@ const GUIDANCE: Record<string, string> = {
   needs_reauthorization: 'Ask the user to reconnect GitHub on their personal account.',
 };
 
+const ROOM_GUIDANCE: Record<string, string> = {
+  not_consented: 'No one in this room has shared their GitHub connection with sasbot. Ask someone in the room to share theirs on sasbot.',
+  not_active: 'GitHub is available only while sasbot works on a room task.',
+  not_connected: 'The person who shared GitHub with sasbot has disconnected it. Ask someone in the room to share theirs.',
+  needs_reauthorization: 'The person who shared GitHub with sasbot needs to reconnect it.',
+};
+
 let connections: ConnectionClient | undefined;
 
 async function githubToken(requestContext?: RequestContext): Promise<{ token: string } | { error: string }> {
@@ -23,7 +30,8 @@ async function githubToken(requestContext?: RequestContext): Promise<{ token: st
     return { token: accessToken };
   } catch (err) {
     if (err instanceof ConnectionError) {
-      return { error: GUIDANCE[err.code] ?? `GitHub is unavailable: ${err.message}` };
+      const guidance = userId.startsWith('room:') ? ROOM_GUIDANCE : GUIDANCE;
+      return { error: guidance[err.code] ?? `GitHub is unavailable: ${err.message}` };
     }
     return { error: `GitHub is unavailable: ${String(err)}` };
   }
