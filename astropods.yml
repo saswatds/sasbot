@@ -33,7 +33,7 @@ knowledge:
 connections:
   - provider: github
     scopes: [repo]
-    required: false
+    required: true
     reason: Read your notifications, pull requests, and issues, and create issues
 
 sandbox:
