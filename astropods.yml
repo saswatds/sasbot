@@ -19,6 +19,8 @@ agent:
       description: Generates a story script.
     - name: story.critique
       description: Critiques a story based.
+    - name: github.issue.create
+      description: Files a GitHub issue. Checks the repository for a duplicate, creates the issue, and reports its link.
 
 models:
   default:
