@@ -13,12 +13,12 @@ agent:
     messaging: true
     frontend: true
   skills:
-    - name: github.issue.investigate
-      description: Investigates a new GitHub issue. Reads it, checks the code and related issues, and reports likely causes and next steps.
-    - name: github.pr.build
-      description: Builds an approved plan. Makes the code change in the repository and opens a GitHub pull request that links the issue.
-    - name: slack.message.triage
-      description: Triages a new Slack message. Reads it, checks the code and related issues, and reports likely causes and next steps.
+    - name: story.ideate
+      description: Generates a story based on an idea.
+    - name: story.script
+      description: Generates a story script.
+    - name: story.critique
+      description: Critiques a story based.
 
 models:
   default:
