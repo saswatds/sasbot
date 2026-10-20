@@ -12,7 +12,7 @@ agent:
   interfaces:
     messaging: true
     frontend: true
-  skills:
+  jobs:
     - name: story.ideate
       description: Generates a story based on an idea.
     - name: story.script
