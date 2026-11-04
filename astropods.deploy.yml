@@ -1,0 +1,11 @@
+spec: deploy/v1
+
+environments:
+  main:
+    branch: main
+    interfaces: [web, mesh]
+    public: { web: false, custom: false }
+    models:
+      default: claude-sonnet-4-6
+    resources:
+      agent: { sizing: auto }
